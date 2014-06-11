@@ -1,0 +1,7 @@
+th, td.seen{
+	cursor: pointer;
+}
+.icon-checkmark{
+	color:green;
+	font-size: 28px;
+}

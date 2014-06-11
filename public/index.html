@@ -1,0 +1,122 @@
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="moviesApp">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>Meantest5</title>
+
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+	<link rel="stylesheet" type="text/css" href="libs/icomoon/style.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/main.css">
+	<style>
+		html 					{ overflow-y:scroll; }
+		body 					{ padding-top:50px; }
+		#movie-list 				{ margin-bottom:30px; }
+	</style>
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script><!-- load angular 1.2.4 -->
+
+	<script src="js/controllers/main.js"></script> <!-- load up our controller -->
+	<script src="js/services/movies.js"></script> <!-- load our movie service -->
+	<script src="js/core.js"></script> <!-- load our main application -->
+
+</head>
+<!-- SET THE CONTROLLER -->
+<body ng-controller="mainController">
+	<div class="container">
+
+		<!-- HEADER AND movie COUNT -->
+		<div class="jumbotron text-center">
+			<h1>My favourite movies: <span class="label label-info">{{ movies.length }}</span></h1>
+		</div>
+
+		<!-- movie LIST -->
+		<div id="movie-list" class="row">
+			<div class="col-sm-10 col-sm-offset-1">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th ng-click="predicate = 'title'; reverse=!reverse">
+								Title
+							</th>
+							<th  ng-click="predicate = 'year'; reverse=!reverse">Year</th>
+							<th>
+								Edit
+							</th>
+							<th>
+								Delete
+							</th>
+							<th>
+								Seen
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="movie in movies | orderBy:predicate:reverse" id="{{movie._id}}">
+							<td ng-hide="enableEditable">
+								<a href="{{movie.imdbLink}}">
+									{{movie.title}}
+								</a>
+							</td>
+					
+							<td ng-hide="enableEditable">{{movie.year}}</td>
+
+							<td ng-hide="enableEditable">
+								<button class="btn btn-info" ng-click="enableEditor($index)">Edit</button>
+							</td>
+
+							<td ng-show="enableEditable"> <input type="text"class="form-control" ng-model="editFormData.title"> </td>
+					
+							<td ng-show="enableEditable"> <input type="text" class="form-control" ng-model="editFormData.year"> </td>
+
+							<td ng-show="enableEditable">
+								<button class="btn btn-success" ng-click="updateMovie(movie._id)">Save</button>
+								<button class="btn btn-danger" ng-click="disableEditor()">Cancel</button>
+							</td>
+
+							<td ng-click="deleteMovie(movie._id)"> <button class="btn btn-danger">Delete</button> </td>
+
+							<td class="seen" ng-click="checked = !checked; seenMovie(movie._id)" seen="{{movie.seen}}" ng-model="formSeen">
+								<span>
+									<i ng-class="checked? 'icon-checkmark' : ''"></i>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- UI ROUTER til en edit -->
+		<!-- FORM TO CREATE movieS -->
+		<div class="well col-md-6">
+			<div id="movie-form" class="row">
+				<div class="">
+					<form>
+						<div class="form-group col-md-12">
+							<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+							<input type="text" class="form-control text-center" placeholder="Movie title" ng-model="formData.title">
+							<br>
+							<input type="text" class="form-control text-center" placeholder="Movie year" ng-model="formData.year">
+							<br>
+							<input type="text" class="form-control text-center" placeholder="IMDb link" ng-model="formData.imdbLink">
+							<br>
+							<!-- createmovie() WILL CREATE NEW movieS -->
+							<button type="submit" class="btn btn-primary" ng-click="createMovie()">Add movie</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+</body>
+</html>
